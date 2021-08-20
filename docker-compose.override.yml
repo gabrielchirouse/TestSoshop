@@ -1,14 +1,14 @@
 version: '3'
 services:
-  app-sf:
+  api-soshop:
     build:
       context: .
-      dockerfile: build/api/Dockerfile
+      dockerfile: build/api-soshop/Dockerfile
     ports:
       - "8888:80"
     networks:
       - back-network
-  mariadb-api:
+  api-mariadb:
     ports:
       - "3306:3306"
     volumes:
