@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -34,8 +36,19 @@ class User
 
     /**
      * @ORM\Column(type="string", length=10)
+     * @ORM\JoinColumn(nullable=false)
      */
     private $phone;
+
+    /**
+     * @ORM\OneToMany(targetEntity=AccountBank::class, mappedBy="user")
+     */
+    private $accountBanks;
+
+    public function __construct()
+    {
+        $this->accountBanks = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -86,6 +99,36 @@ class User
     public function setPhone(string $phone): self
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|AccountBank[]
+     */
+    public function getAccountBanks(): Collection
+    {
+        return $this->accountBanks;
+    }
+
+    public function addAccountBank(AccountBank $accountBank): self
+    {
+        if (!$this->accountBanks->contains($accountBank)) {
+            $this->accountBanks[] = $accountBank;
+            $accountBank->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAccountBank(AccountBank $accountBank): self
+    {
+        if ($this->accountBanks->removeElement($accountBank)) {
+            // set the owning side to null (unless already changed)
+            if ($accountBank->getUser() === $this) {
+                $accountBank->setUser(null);
+            }
+        }
 
         return $this;
     }

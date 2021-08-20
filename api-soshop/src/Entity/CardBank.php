@@ -27,6 +27,11 @@ class CardBank
      */
     private $status;
 
+    /**
+     * @ORM\OneToOne(targetEntity=AccountBank::class, mappedBy="cardBank", cascade={"persist", "remove"})
+     */
+    private $accountBank;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +57,23 @@ class CardBank
     public function setStatus(string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getAccountBank(): ?AccountBank
+    {
+        return $this->accountBank;
+    }
+
+    public function setAccountBank(AccountBank $accountBank): self
+    {
+        // set the owning side of the relation if necessary
+        if ($accountBank->getCardBank() !== $this) {
+            $accountBank->setCardBank($this);
+        }
+
+        $this->accountBank = $accountBank;
 
         return $this;
     }

@@ -19,6 +19,28 @@ class AccountBankRepository extends ServiceEntityRepository
         parent::__construct($registry, AccountBank::class);
     }
 
+    public function save(AccountBank $accountBank){
+        $em = $this->getEntityManager();
+        $em->persist($accountBank);
+        $em->flush();
+    }
+
+    public function remove(AccountBank $accountBank){
+        $em = $this->getEntityManager();
+        $em->remove($accountBank);
+        $em->flush();
+    }
+
+    public function update(AccountBank $newAccountBankData, AccountBank $updateAccountBank){
+        $em = $this->getEntityManager();
+        if ($newAccountBankData->getBalance()) $updateAccountBank->setBalance($newAccountBankData->getBalance());
+        if ($newAccountBankData->getBic()) $updateAccountBank->setBic($newAccountBankData->getBic());
+        if ($newAccountBankData->getIban()) $updateAccountBank->setIban($newAccountBankData->getIban());
+        $em->persist($updateAccountBank);
+        $em->flush();
+
+        return $updateAccountBank;
+    }
     // /**
     //  * @return AccountBank[] Returns an array of AccountBank objects
     //  */
