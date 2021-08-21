@@ -32,6 +32,7 @@ class UserRepository extends ServiceEntityRepository
         $em->persist($user);
         $user->getAccountBanks()->map(function (AccountBank $accountBank) use (&$em){
             $accountBank->setDeletionDate(new \DateTime());
+            $accountBank->getCardBank()->setStatus('fermée');
             $accountBank->getCardBank()->setDeletionDate(new \DateTime());
             $em->persist($accountBank);
         });
