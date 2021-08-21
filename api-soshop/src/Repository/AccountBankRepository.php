@@ -39,6 +39,7 @@ class AccountBankRepository extends ServiceEntityRepository
      */
     public function remove(AccountBank $accountBank){
         $accountBank->setDeletionDate(new \DateTime());
+        $accountBank->getCardBank()->setStatus('fermée');
         $accountBank->getCardBank()->setDeletionDate(new \DateTime());
         $em = $this->getEntityManager();
         $em->persist($accountBank);
