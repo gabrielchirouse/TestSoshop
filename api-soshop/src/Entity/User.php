@@ -45,6 +45,16 @@ class User
      */
     private $accountBanks;
 
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $birthday;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $deletionDate;
+
     public function __construct()
     {
         $this->accountBanks = new ArrayCollection();
@@ -129,6 +139,30 @@ class User
                 $accountBank->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getBirthday(): ?\DateTimeInterface
+    {
+        return $this->birthday;
+    }
+
+    public function setBirthday(\DateTimeInterface $birthday): self
+    {
+        $this->birthday = $birthday;
+
+        return $this;
+    }
+
+    public function getDeletionDate(): ?\DateTimeInterface
+    {
+        return $this->deletionDate;
+    }
+
+    public function setDeletionDate(?\DateTimeInterface $deletionDate): self
+    {
+        $this->deletionDate = $deletionDate;
 
         return $this;
     }

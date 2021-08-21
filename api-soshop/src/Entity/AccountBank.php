@@ -51,6 +51,12 @@ class AccountBank
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     * @Serializer\Expose
+     */
+    private $deletionDate;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -112,6 +118,18 @@ class AccountBank
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getDeletionDate(): ?\DateTimeInterface
+    {
+        return $this->deletionDate;
+    }
+
+    public function setDeletionDate(?\DateTimeInterface $deletionDate): self
+    {
+        $this->deletionDate = $deletionDate;
 
         return $this;
     }

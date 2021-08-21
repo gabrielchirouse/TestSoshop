@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CardBankRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @ORM\Entity(repositoryClass=CardBankRepository::class)
@@ -23,7 +24,7 @@ class CardBank
     private $number;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, columnDefinition="ENUM('active', 'fermée', 'volée')")
      */
     private $status;
 
@@ -31,6 +32,21 @@ class CardBank
      * @ORM\OneToOne(targetEntity=AccountBank::class, mappedBy="cardBank", cascade={"persist", "remove"})
      */
     private $accountBank;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $deletionDate;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $expiryDate;
+
+    public function __construct()
+    {
+        $this->status = 'active';
+    }
 
     public function getId(): ?int
     {
@@ -54,10 +70,15 @@ class CardBank
         return $this->status;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function setStatus(string $status): self
     {
+        if (!in_array($status,['active','fermée','volée'])){
+            throw new \Exception('the status is not included in active, fermée and volée.',Response::HTTP_NOT_ACCEPTABLE);
+        }
         $this->status = $status;
-
         return $this;
     }
 
@@ -74,6 +95,30 @@ class CardBank
         }
 
         $this->accountBank = $accountBank;
+
+        return $this;
+    }
+
+    public function getDeletionDate(): ?\DateTimeInterface
+    {
+        return $this->deletionDate;
+    }
+
+    public function setDeletionDate(?\DateTimeInterface $deletionDate): self
+    {
+        $this->deletionDate = $deletionDate;
+
+        return $this;
+    }
+
+    public function getExpiryDate(): ?\DateTimeInterface
+    {
+        return $this->expiryDate;
+    }
+
+    public function setExpiryDate(\DateTimeInterface $expiryDate): self
+    {
+        $this->expiryDate = $expiryDate;
 
         return $this;
     }

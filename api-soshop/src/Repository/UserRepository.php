@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\AccountBank;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -26,8 +27,14 @@ class UserRepository extends ServiceEntityRepository
     }
 
     public function remove(User $user){
+        $user->setDeletionDate(new \DateTime());
         $em = $this->getEntityManager();
-        $em->remove($user);
+        $em->persist($user);
+        $user->getAccountBanks()->map(function (AccountBank $accountBank) use (&$em){
+            $accountBank->setDeletionDate(new \DateTime());
+            $accountBank->getCardBank()->setDeletionDate(new \DateTime());
+            $em->persist($accountBank);
+        });
         $em->flush();
     }
 
