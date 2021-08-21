@@ -106,8 +106,7 @@ class AccountBankController extends AbstractController
             $fsObject->appendToFile($new_file_path, $accountBank->getCardBank()->getExpiryDate()->format('d/m/Y'));
             return $this->redirect($filePath);
         }catch (IOExceptionInterface $exception){
-            dd($exception);
-            return new Response($exception->getMessage(), $exception->getCode());
+            return new Response($exception->getMessage(), Response::HTTP_NOT_ACCEPTABLE);
         }
     }
 }
